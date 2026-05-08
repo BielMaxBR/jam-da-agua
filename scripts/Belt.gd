@@ -3,11 +3,13 @@ class_name Belt
 
 var texture = preload("res://assets/belt.png")
 
+var direction := Vector2.UP
+
 func init():
 	anim_data.frame_size = Vector2(32,32)
 	anim_data.max_frames = 4
-	anim_data.anim_speed = 4
+	anim_data.anim_speed = 12
 	anim_data.sheetRID = texture.get_rid()
-
+	anim_data.direction = direction
 func update(delta: float):
-	anim_data.update_frame(delta,position)
+	pass
