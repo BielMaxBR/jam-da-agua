@@ -21,6 +21,7 @@ func add_item(item:Item):
 	await self.rendering
 	RenderingServer.canvas_item_set_parent(canvas_item, anim_data.canvas_item)
 	RenderingServer.canvas_item_set_draw_index(canvas_item,1)
+	RenderingServer.canvas_item_set_z_index(canvas_item,1 +position.y)
 	RenderingServer.canvas_item_set_sort_children_by_y(canvas_item,true)
 	#render_item(block)
 
@@ -46,6 +47,13 @@ func update(delta: float):
 		if change != block.offset:
 			block.offset = change
 
+	transfer_item()
+
+func transfer_item():
+	var next_pos = position + Vector2i(direction)
+	if not GridManager.has_tile(next_pos): return
+	var next_tile = GridManager.get_tile(next_pos)
+	
 func render(delta: float,clock: float) -> void:
 	anim_data.update_frame(delta,position, clock)
 	for block in items:

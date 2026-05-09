@@ -14,10 +14,10 @@ func _init() -> void:
 func _ready() -> void:
 	RenderingServer.canvas_item_set_parent(global_canvas_item,Globals.root.get_canvas())
 
-func has_structure(pos:Vector2i):
+func has_tile(pos:Vector2i):
 	return grid.has(pos)
 
-func add_structure(struct: Tile,pos:Vector2i):
+func add_tile(struct: Tile,pos:Vector2i):
 	if grid.get(pos) != null: return
 	grid.set(pos,struct)
 	
@@ -28,7 +28,13 @@ func add_structure(struct: Tile,pos:Vector2i):
 			return
 	render_list.append(pos)
 
-func delete_strucutre(pos: Vector2):
+func get_tile(pos: Vector2i):
+	if has_tile(pos):
+		return grid.get(pos)
+	else:
+		return null
+
+func delete_tile(pos: Vector2):
 	render_list.erase(pos)
 	grid.erase(pos)
 
