@@ -15,3 +15,6 @@ func init() -> void
 
 @abstract
 func update(delta: float) -> void
+
+@abstract
+func render(delta: float,clock: float) -> void

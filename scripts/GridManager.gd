@@ -2,9 +2,17 @@ extends Node
 
 var grid: Dictionary[Vector2i,Tile] = {}
 
-var global_list: Array[Tile] = []
+var render_list: Array[Vector2] = []
+
+var global_canvas_item := RenderingServer.canvas_item_create()
+
 
 var TILE_SIZE = Vector2i(32,32)
+
+func _init() -> void:
+	RenderingServer.canvas_item_set_sort_children_by_y(global_canvas_item,true)
+func _ready() -> void:
+	RenderingServer.canvas_item_set_parent(global_canvas_item,Globals.root.get_canvas())
 
 func has_structure(pos:Vector2i):
 	return grid.has(pos)
@@ -12,17 +20,25 @@ func has_structure(pos:Vector2i):
 func add_structure(struct: Tile,pos:Vector2i):
 	if grid.get(pos) != null: return
 	grid.set(pos,struct)
-	global_list.append(struct)
+	
+	for i in len(render_list):
+		var actual_pos = render_list[i]
+		if actual_pos.y >= pos.y:
+			render_list.insert(i,pos)
+			return
+	render_list.append(pos)
 
 func delete_strucutre(pos: Vector2):
-	var tile = grid.get(pos)
-	global_list.erase(tile)
+	render_list.erase(pos)
 	grid.erase(pos)
 
 var clock = 0
 func _process(delta: float) -> void:
 	clock += delta
-	for tile: Tile in global_list:
-		tile.update(delta)
 	for tile: Tile in grid.values():
-		tile.anim_data.update_frame(delta,tile.position, clock)
+		tile.update(delta)
+	for pos: Vector2i in render_list:
+		var tile = grid.get(pos)
+		#print(pos.y)
+		tile.render(delta,clock)
+	#print('----------------')

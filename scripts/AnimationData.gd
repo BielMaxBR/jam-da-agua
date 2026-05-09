@@ -4,12 +4,14 @@ class_name AnimationData
 var actual_frame: float = 0
 var max_frames: int
 var anim_speed: float
-#var sheet_size: Vector2i
+
 var frame_size: Vector2i
 var direction: Vector2 = Vector2.LEFT
+
 var sheetRID: RID
 var canvas_item: RID
 var canvas: RID
+
 var is_playing: bool = true
 var is_synced = true
 
@@ -17,6 +19,9 @@ func _init(_canvas: RID):
 	canvas = _canvas
 	canvas_item = RenderingServer.canvas_item_create()
 	RenderingServer.canvas_item_set_parent(canvas_item, canvas)
+	RenderingServer.canvas_item_set_draw_index(canvas_item,1)
+	RenderingServer.canvas_item_set_sort_children_by_y(canvas_item,true)
+	
 
 func update_frame(delta: float, grid_pos: Vector2i, clock: float):
 	if not is_playing: return
