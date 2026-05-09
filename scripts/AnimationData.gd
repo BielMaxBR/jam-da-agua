@@ -9,10 +9,12 @@ var frame_size: Vector2i
 var direction: Vector2 = Vector2.LEFT
 var sheetRID: RID
 var canvas_item: RID
+var canvas: RID
 var is_playing: bool = true
 var is_synced = true
 
-func _init(canvas):
+func _init(_canvas: RID):
+	canvas = _canvas
 	canvas_item = RenderingServer.canvas_item_create()
 	RenderingServer.canvas_item_set_parent(canvas_item, canvas)
 

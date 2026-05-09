@@ -13,7 +13,7 @@ func _physics_process(delta: float) -> void:
 	pos = (pos).snapped(GridManager.TILE_SIZE) / GridManager.TILE_SIZE
 	
 	$Label.text = "(%s, %s)" % [pos.x,pos.y]
-	if Input.is_action_pressed("click"):
+	if Input.is_action_pressed("click") and not GridManager.has_structure(pos):
 		var belt := Belt.new(get_canvas(), pos)
 		GridManager.add_structure(belt,pos)
 		var speed = Input.get_last_mouse_screen_velocity().normalized()
