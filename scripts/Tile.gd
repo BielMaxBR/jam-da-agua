@@ -18,3 +18,6 @@ func update(delta: float) -> void
 
 @abstract
 func render(delta: float,clock: float) -> void
+
+@abstract
+func delete() -> void

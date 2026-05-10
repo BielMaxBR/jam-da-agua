@@ -26,4 +26,6 @@ func _physics_process(delta: float) -> void:
 			
 		belt.direction = dir
 		belt.init()
+	if Input.is_action_pressed("erase") and GridManager.has_tile(pos):
+		GridManager.delete_tile(pos)
 	

@@ -7,14 +7,15 @@ var direction := Vector2.UP
 
 var items : Array[Dictionary] = []
 var max_items = 4
+var item_size := Vector2(20,20)
 
 signal rendering
 
-func add_item(item:Item):
+func add_item(item:Item, offset: float = 0.0):
 	var canvas_item = RenderingServer.canvas_item_create()
 	var block = {
 		"item": item,
-		"offset": 0.0,
+		"offset": offset,
 		"canvas_item": canvas_item
 	}
 	items.append(block)
@@ -26,7 +27,9 @@ func add_item(item:Item):
 	#render_item(block)
 
 func pop_item() -> Item:
-	return items.pop_front().item
+	var block = items.pop_front()
+	RenderingServer.canvas_item_clear(block.canvas_item)
+	return block.item
 
 func init():
 	anim_data.frame_size = Vector2(32,32)
@@ -35,9 +38,9 @@ func init():
 	anim_data.sheetRID = texture.get_rid()
 	anim_data.direction = direction
 	add_item(Item.new(preload("res://icon.svg")))
-	add_item(Item.new(preload("res://icon.svg")))
-	add_item(Item.new(preload("res://icon.svg")))
-	add_item(Item.new(preload("res://icon.svg")))
+	#add_item(Item.new(preload("res://icon.svg")))
+	#add_item(Item.new(preload("res://icon.svg")))
+	#add_item(Item.new(preload("res://icon.svg")))
 	
 
 func update(delta: float):
@@ -50,18 +53,38 @@ func update(delta: float):
 	transfer_item()
 
 func transfer_item():
+	if len(items) == 0: return
+	if items[0].offset != 1: return
 	var next_pos = position + Vector2i(direction)
 	if not GridManager.has_tile(next_pos): return
-	var next_tile = GridManager.get_tile(next_pos)
+	var next_tile: Tile = GridManager.get_tile(next_pos)
+	if not next_tile is Belt: return
+	next_tile = next_tile as Belt
 	
+	var their_direction = next_tile.direction
+	var diff = abs(abs(their_direction.angle()) - abs(direction.angle()))
+	#print(diff," ", PI/2)
+	if is_equal_approx(diff,PI/2):
+		if len(next_tile.items) <= max_items/2:
+			var item = pop_item()
+			next_tile.add_item(item, 0.49)
+	elif diff == 0:
+		if len(next_tile.items) < max_items:
+			var item = pop_item()
+			next_tile.add_item(item)
+
 func render(delta: float,clock: float) -> void:
 	anim_data.update_frame(delta,position, clock)
 	for block in items:
 		render_item(block)
 
+func delete():
+	anim_data.delete()
+	for block in items:
+		RenderingServer.canvas_item_clear(block.canvas_item)
+
 func render_item(block: Dictionary):
 	rendering.emit()
-	var item_size := Vector2(16,16)
 	
 	var offset = item_size/2 - Vector2(0,item_size.y) - Vector2(32,32)*block.offset*Vector2.UP #sim numero magico
 

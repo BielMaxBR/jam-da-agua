@@ -34,7 +34,8 @@ func get_tile(pos: Vector2i):
 	else:
 		return null
 
-func delete_tile(pos: Vector2):
+func delete_tile(pos: Vector2i):
+	grid[pos].delete()
 	render_list.erase(pos)
 	grid.erase(pos)
 

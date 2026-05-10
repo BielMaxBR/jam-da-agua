@@ -44,3 +44,6 @@ func update_frame(delta: float, grid_pos: Vector2i, clock: float):
 	RenderingServer.canvas_item_clear(canvas_item)
 	RenderingServer.canvas_item_add_texture_rect_region(canvas_item,position_rect,sheetRID,frame_rect)
 	RenderingServer.canvas_item_set_transform(canvas_item, transform)
+
+func delete():
+	RenderingServer.canvas_item_clear(canvas_item)
